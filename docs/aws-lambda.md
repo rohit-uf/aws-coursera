@@ -98,7 +98,7 @@ Pass environment variables without having to change the code
 
 - PUSH
   - When an **external event** is pushed to the Lambda Function. By API Gateway, or by some external trigger
-  - Synchronus
+  - Synchronus or Asynchronus
 
 - PULL
   - When Lambda function pulls some events from external sources. Like from a Queue
@@ -106,3 +106,52 @@ Pass environment variables without having to change the code
   - Amazon Kinesis Stream
   - Amazon Dynamo DB Stream
   - Asynchronus
+  
+### Invocation - PUSH Method
+
+**Synchronous**
+1. Request + Wait for Response
+2. Keep the connection open until the response is received
+
+**Asynchronous**
+
+1. Request + Get response, stating that lambda will execute asynchronusly
+
+2. Client need not wait for lambda to execute
+
+3. Problematic, if an error occurs during lambda execution
+
+4. `Maximum Retries`: A setting that tells lambda to re-execute if an error occurs, how many number of times
+
+5. `Maximum Age of Events`: How long to keep uncompleted asynchronus lambda events in the queue
+
+6. `Dead letter queue`: If maximum age + maximum no of retries exceeds, the event can be moved to an Amazon SNS/SQS queue
+
+### Lambda Destinations
+
+1. Send messages to **SQS/SNS/Another Lambda** on success, failure (Completion of execution) of lambda
+
+> System creates a new version of the function, each time the lambda function is Published
+
+A Version contains
+- Code
+- Configurations
+- Amazon Resource Name (ARN)
+
+**ALIAS**
+
+- Can be used to refer to the latest published version of Lambda
+- Can be accessed via its ARN
+```sh
+create-alias --function-name --name --alias-name
+update-alias --function-name --name --alias-name
+``` 
+
+### Handler
+
+```py
+def handler(event, context):
+
+event = Details about the incoming request
+context = Details about the invocation (Request ID, Version Number, ARN, Execution environment details)
+```
