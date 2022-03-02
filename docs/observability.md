@@ -55,3 +55,17 @@ Annotations and Metadata can be added at the sub-segment level by the SDK
 If code is running on AWS Lambda, the X-ray Daemon is installed and managed automatically
 If code is running X-ray outside of Lambda you may need to install and manage the daemon yourself
 
+- Logs from different origins, in our serverless application need to be collected
+
+## Amazon Cloudwatch Logs
+
+- **Log Event**: Contains time-stamp of occuring and the raw data of the event. Ex: Invocation of one instance of lambda function
+- **Log Stream**: Sequence of logs that share the same source. Ex: Invocation of multiple instances of one lambda function
+- **Log Group**: Group of logs, that share the same retention and access-control policy. Ex: Lambda Function
+- **Retention Settings**: Defined settings for how long a log-event would be stored before removing it
+
+### Cloudwatch Integration
+1. **API Gateway**: Create an IAM Role with access to Cloudwatch logs
+  1. Execution Logging: For event occurring in the Gateway with the saved in-out flow. **Context** variable is passed here
+  2. Access Logging: Only available for REST API. Logs the entire request
+2. **AWS Step Functions**: Enabled by default for Expres workflow. For standard, need to be enabled manually 
