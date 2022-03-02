@@ -49,11 +49,12 @@ SDK ---- Trace Data ---> X-Ray Daemon -> X-Ray API
 
 Annotations and Metadata can be added at the sub-segment level by the SDK
 
-- Annotations: Key-Value pairs, associated with a trace ande used for searching the trace later
-- Metadata: cannot be searched upon, but can be used to store further information. It can be Key-Value, Object, List
+- **Annotations**: Key-Value pairs, associated with a trace ande used for searching the trace later
+- **Metadata**: cannot be searched upon, but can be used to store further information. It can be Key-Value, Object, List
 
-If code is running on AWS Lambda, the X-ray Daemon is installed and managed automatically
-If code is running X-ray outside of Lambda you may need to install and manage the daemon yourself
+- If code is running on AWS Lambda, the X-ray Daemon is installed and managed automatically
+- If code is running X-ray outside of Lambda you may need to install and manage the daemon yourself
+- To send logs from Lambda to Cloudwatch, write to `stdout` and `stderr`
 
 - Logs from different origins, in our serverless application need to be collected
 
@@ -69,3 +70,5 @@ If code is running X-ray outside of Lambda you may need to install and manage th
   1. Execution Logging: For event occurring in the Gateway with the saved in-out flow. **Context** variable is passed here
   2. Access Logging: Only available for REST API. Logs the entire request
 2. **AWS Step Functions**: Enabled by default for Expres workflow. For standard, need to be enabled manually 
+
+
