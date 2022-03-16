@@ -4,7 +4,7 @@
 
 - Problem with Horizontal Scalability
 - Normalization, JOINs are CPU Intensive Tasks
-- NoSQL -> means `Not Only SQL` 
+- NoSQL -> means `Not Only SQL`
 
 ### CAP Theorem
 
@@ -90,3 +90,86 @@ Don't work well for:
 
 > Local Secondary Index: Enables to create an alternate SORT KEY
 > Global Secondary Index: Enables to create alternate PARTITION KEY and SORT KEy
+
+## Backup and Restoration
+
+### Backup
+
+- **Amazon DynamoDB On-Demand Backup**: Request -> Backup is done Asynchronously
+- **Point in Time Recovery**: Automatic
+
+```sh
+# pass table-name and backup-name
+aws dynamodb create-backup
+
+# pass backup-arn
+aws dynamodb describe-backup
+```
+
+### Restoring
+
+- Restoring from **On-Demand Backup** -> Requires a destination table, Specify `Backup ARN`, Destination Table will be ready for use after Backup is complete
+- Restoring from **Point in Time Backup** -> Specify Point in Time, which needs to be recovered
+
+```sh
+# pass target-table-name and backup-arn
+aws dynamodb restore-table-from-backup
+```
+
+On the restored table, following needs to be set manually
+- Autoscaling
+- IAM Policy
+- Cloudwatch Metrics
+- Tags
+- Time To Live Settings
+
+> SCAN are paginated by default. No. of records returned are equal to --max-items limit or 1 MB whichever comes first
+`--max-items` flag can be passed with an integer, specifying the upper limit for the no. of records to be returnecd
+
+### BatchWriteItem
+
+- Define multiple items to write to one table / multiple tables together in **1 Request**
+- `Write` and `Delete` allowed. `Update` not allowed
+- Failed items would be returned in `unprocessed item`
+
+### BatchGetItem
+
+- Allows to read multiple items across multiple tables
+- Failed items would be returned in `unprocessed keys`
+
+## Monitoring Amazon DynamoDB Tables
+
+- Cloudtrail
+- Cloudwatch
+  - Read, Write Capacity Unit (RCU, WCU)
+  - 1 RCU : 1 Strongly Consistent Read per sec / 2 Eventually Consisten Read per sec upto 4 KB
+  - 1 WCU : 1 Write / Sec upto 1 KB
+  - No of Items returned in each query
+  - Latency
+- AWS X-Ray
+
+### RCU / WCU
+
+- Consumed RCU / WCU over a time period, provided by Cloudwatch
+- Total Consumed RCU / WCU
+- Slow throughput --> Consumed RCU > Provisioned RCU (or WCU)
+- More RCU would be used for entire table SCANs. Prefer Query and Filters
+
+### DynamoDB Auto Scaling
+
+- Dynamically adjust provisioned capacity
+- Handle sudden increase in traffic
+
+
+## Partition Keys
+
+### Partition
+
+- Data in DynamoDB is stored in Partitions
+- Partitions are unit of storage, backed by SSD, replicated in multiple availability zones within the AWS Region
+- As table grows, more partitions are added
+- If only `partition key` is used for an item -> Hash the `partition key` and determine the partition to put the Item in
+- If both `partition key` and `sort key` are used
+  - Hash the `partition key` and determine the partition to put the Item in
+  - Sort the item within that partition based on the `partition key`
+- `Adaptive Capacity` : Automatically increase capacity
