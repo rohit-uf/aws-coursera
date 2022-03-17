@@ -172,4 +172,55 @@ On the restored table, following needs to be set manually
 - If both `partition key` and `sort key` are used
   - Hash the `partition key` and determine the partition to put the Item in
   - Sort the item within that partition based on the `partition key`
-- `Adaptive Capacity` : Automatically increase capacity
+- `Adaptive Capacity` : Automatically provision capacity (increase/decrease)
+
+Notes: Read [here](https://www.coursera.org/learn/dynamodb-nosql-database-driven-apps/supplement/0u5SD/week-2-notes-and-resources)
+
+## Security State
+
+- All dynamodb data, related information and backups are encrypted at rest by default (On the hard drive)
+- Can integrate with AWS Key Management Service
+- `dynamodb-encryption-client` is a library, allows to include client side encryption in dynamodb library
+- Server side encryption is provided by default
+- Dynamo DB is HIPAA Compliant
+- When integrating with Cloudfront, can choose **Key Level Encryption**
+- Can use `Tokenization` for other compliance standards like PCI DSS (Payment card)
+
+## TTL
+
+- Time to live
+- Once current time is greater than the TTL Attribute, the item is marked as expired
+- Items that are expired, will be deleted within 48 hours
+- Items that are expired, but not deleted will show up in Reads, Scans and Queries
+- Can enable on each table
+- When items are deleted, they are also deleted from any Secondary Index (Eventually Consistent) manner
+
+## Access Control
+
+- Authentication is used to access DynamoDB Resources, with **Credentials**
+- Authorization is used to modify DynamoDB Resources, with **Permissions**
+- Can be handled using IAM Roles
+- Role Based Access Keys should be used as they expire and are rotated after a configured time 
+- IAM Policy to assign permissions to API Endpoints for specific users
+- VPC: Isolate virtual private cloud
+  - If lambda code is inside a VPC, it needs to go through the Internet Gateway to reach DynamoDB
+  - Any request to lambda code, must go through the Internet Gateway to reach VPC
+  - VPC Endpoints: Used to route any request to a Regional Service, using Amazon's Private Network and not the Internet
+
+
+## Global Tables
+- To reduce latency for international users, tables can be replicated in different **AWS Regions**
+- **Global Tables** can be created, which is used to replicate tables in different regions
+- All replicated tables are kept in sync with the Global Tables using `Streams`
+- Whenever any `write` happens in one of the table, the change is pushed to all other tables via Streams
+- Read is eventually consistent
+
+### Streams
+- Provide a `time-ordered` sequence of `item-level` changes in a table
+- Allow to capture changes to a DynamoDB Table
+  - Changes are applied `in-order`
+  - Changes are applied in `real-time`
+- Can also be used to capture certain events, and run business logic on invocation of those events
+- Are kept independent of DynamoDB Implementation
+> Full Text searching is not available in DynamoDB
+- Can associate streams with fields that need to be text-searched. Once a new event appears in the stream, a Lambda Function can put that field with other relevant data inside an ElasticSearch Cluster
