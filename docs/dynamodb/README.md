@@ -260,3 +260,17 @@ Notes: Read [here](https://www.coursera.org/learn/dynamodb-nosql-database-driven
 - `> , < , =` operators are available to query
 - `AND, OR, IN, BETWEEN` operators can be used to filter
 - `begins_with` , `contains`
+
+### Single Table
+
+- Unlike relational tables, where schema precedes queries. In dynamodb we should first know which queries we will require, and based on that we should design the tables
+- To make querying efficient, create LSI and GSI
+- **Transactions API** : To make a set of queries atomic.
+
+### Time series data
+
+- Data which is segregated on time series like quarterly, monthly etc, should be kept in separate tables for each time interval
+- Data which is older, can be provisioned with less Read/Write Units
+- Data which is newer can be provisioned to use more Read/Write units
+- Amazon Timestream : Dedicated DB for time series data
+
