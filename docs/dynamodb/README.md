@@ -89,7 +89,7 @@ Don't work well for:
 - This table is kept in sync with the Primary Table `Asynchronusly`
 
 > Local Secondary Index: Enables to create an alternate SORT KEY
-> Global Secondary Index: Enables to create alternate PARTITION KEY and SORT KEy
+> Global Secondary Index: Enables to create alternate PARTITION KEY and SORT KEY
 
 ## Backup and Restoration
 
