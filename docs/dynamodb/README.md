@@ -274,3 +274,10 @@ Notes: Read [here](https://www.coursera.org/learn/dynamodb-nosql-database-driven
 - Data which is newer can be provisioned to use more Read/Write units
 - Amazon Timestream : Dedicated DB for time series data
 
+## Faster Retrieval of Data
+
+- In-Memory Cache
+- Dynamo DB Accelarator (DAX)
+  - Fully managed in-memory cache
+  - microsecond response time
+  - Scale easily
