@@ -84,12 +84,11 @@ Don't work well for:
 
 ### Secondary Index
 
-- Creates a copy of table, with an alternate schema
-- Make other fields searchable by making them `Key`
+- contains a subset of attributes from a Base Table along with an Alternate Key to support Query Operations
+- make other fields searchable by making them `Key`
 - This table is kept in sync with the Primary Table `Asynchronusly`
-
-> Local Secondary Index: Enables to create an alternate SORT KEY
-> Global Secondary Index: Enables to create alternate PARTITION KEY and SORT KEY
+- Local Secondary Index: Enables to create an alternate SORT KEY
+- Global Secondary Index: Enables to create alternate PARTITION KEY and SORT KEY
 
 ## Backup and Restoration
 
@@ -231,3 +230,33 @@ Notes: Read [here](https://www.coursera.org/learn/dynamodb-nosql-database-driven
 
 - When multiple clients are reading and writing from the database at the same time, we need to make sure the data they are accessing is Consistent. 
 - DynamoDB does not provide any row locking mechanism by itself. It needs to be handled by the developer 
+
+### Optimistic Locking
+- Can be implemented with `Conditional Writes`
+  - PutItem
+  - UpdateItem
+  - DeleteItem
+- Keep an attribute `version_number` on the Item to be updated or deleted
+  1. Retrieve the version number before updating
+  2. Check if the version number sent with update request, is the same as the version number in the table. Only then make the update
+  3. After the update is complete, increment the version number  
+
+## Secondary Index in detail
+
+### LSI: Local Secondary Index
+- Can only be created when the table is created
+- Can not be created after the table has been created
+- Have a different SORT KEY for indexing
+- When a table is deleted, its LSIs are also deleted
+
+### GSI: Global Secondary Index
+- Can be created during table creation or later
+- DynamoDB Handles synchronization of Base Tables with the GSIs
+- On a provisioned Base Table, must specify Read/Write units
+
+> Only create secondary indexes on attributes that are queried very often
+
+## Querying
+- `> , < , =` operators are available to query
+- `AND, OR, IN, BETWEEN` operators can be used to filter
+- `begins_with` , `contains`
