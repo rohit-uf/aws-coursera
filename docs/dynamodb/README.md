@@ -211,7 +211,7 @@ Notes: Read [here](https://www.coursera.org/learn/dynamodb-nosql-database-driven
 ## Global Tables
 - To reduce latency for international users, tables can be replicated in different **AWS Regions**
 - **Global Tables** can be created, which is used to replicate tables in different regions
-- All replicated tables are kept in sync with the Global Tables using `Streams`
+- All replicated tables are kept in sync with the each other using `Streams`
 - Whenever any `write` happens in one of the table, the change is pushed to all other tables via Streams
 - Read is eventually consistent
 
@@ -224,3 +224,10 @@ Notes: Read [here](https://www.coursera.org/learn/dynamodb-nosql-database-driven
 - Are kept independent of DynamoDB Implementation
 > Full Text searching is not available in DynamoDB
 - Can associate streams with fields that need to be text-searched. Once a new event appears in the stream, a Lambda Function can put that field with other relevant data inside an ElasticSearch Cluster
+
+## Concurrency
+
+### Concurrent Updates
+
+- When multiple clients are reading and writing from the database at the same time, we need to make sure the data they are accessing is Consistent. 
+- DynamoDB does not provide any row locking mechanism by itself. It needs to be handled by the developer 
